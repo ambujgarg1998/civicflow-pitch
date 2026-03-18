@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CivicFlow — Your Commute. Guaranteed.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0B1628;
+    --navy-mid: #132035;
+    --navy-light: #1E3050;
+    --amber: #F0A500;
+    --amber-light: #FFD166;
+    --teal: #1DB3A0;
+    --teal-light: #3ECFBA;
+    --white: #F8F7F4;
+    --gray: #8A9BB0;
+    --gray-light: #C5CDD8;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 4rem;
+    background: rgba(11,22,40,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .nav-logo span {
+    display: inline-block; width: 28px; height: 28px;
+    background: var(--amber); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 800; color: var(--navy);
+  }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.85rem; font-weight: 400; color: var(--gray);
+    text-decoration: none; letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    font-size: 0.85rem; font-weight: 500;
+    padding: 0.55rem 1.4rem;
+    background: var(--amber); color: var(--navy);
+    border: none; border-radius: 6px; cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--amber-light); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    gap: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(29,179,160,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    border: 1px solid rgba(29,179,160,0.3);
+    padding: 0.4rem 1rem; border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--teal); border-radius: 50%;
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: clamp(2.8rem, 5vw, 4.2rem);
+    line-height: 1.05; letter-spacing: -0.03em;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    font-style: normal; color: var(--amber);
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem; font-weight: 300;
+    color: var(--gray-light); line-height: 1.7;
+    max-width: 480px; margin-bottom: 2.5rem;
+  }
+
+  .hero-actions { display: flex; align-items: center; gap: 1.25rem; }
+
+  .btn-primary {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    padding: 0.85rem 2rem;
+    background: var(--amber); color: var(--navy);
+    border: none; border-radius: 8px; cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--amber-light); transform: translateY(-2px); }
+
+  .btn-secondary {
+    font-size: 0.9rem; font-weight: 400; color: var(--gray-light);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+  .btn-secondary:hover { color: var(--white); }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-item { display: flex; flex-direction: column; gap: 4px; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1.8rem;
+    color: var(--white); letter-spacing: -0.02em;
+  }
+  .stat-num span { color: var(--amber); }
+  .stat-label { font-size: 0.78rem; color: var(--gray); letter-spacing: 0.02em; }
+
+  .hero-image-wrap {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .hero-image-wrap::before {
+    content: '';
+    position: absolute; inset: -20px;
+    background: radial-gradient(circle at center, rgba(240,165,0,0.12) 0%, transparent 70%);
+    border-radius: 20px;
+  }
+
+  .hero-img {
+    width: 100%; max-width: 520px;
+    border-radius: 16px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+    position: relative; z-index: 1;
+  }
+
+  /* SECTION BASE */
+  section { padding: 6rem 4rem; }
+  .section-label {
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.6rem);
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--white); margin-bottom: 1.25rem;
+  }
+  .section-sub {
+    font-size: 1rem; font-weight: 300; color: var(--gray-light);
+    max-width: 560px; line-height: 1.75;
+  }
+
+  /* PROBLEM */
+  .problem { background: var(--navy-mid); }
+
+  .problem-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  }
+
+  .problem-cards { display: flex; flex-direction: column; gap: 1rem; }
+
+  .problem-card {
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .problem-card:hover { border-color: rgba(240,165,0,0.3); }
+
+  .problem-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    background: rgba(240,165,0,0.1);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .problem-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 0.95rem;
+    color: var(--white); margin-bottom: 4px;
+  }
+  .problem-card p { font-size: 0.85rem; color: var(--gray); line-height: 1.6; }
+
+  /* SOLUTION */
+  .solution { background: var(--navy); }
+  .solution-inner { max-width: 1100px; margin: 0 auto; }
+  .solution-header { margin-bottom: 3.5rem; }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute; top: 32px; left: calc(16.66% + 1rem); right: calc(16.66% + 1rem);
+    height: 1px; background: linear-gradient(90deg, var(--teal), var(--amber));
+    opacity: 0.3;
+  }
+
+  .step-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 14px; padding: 2rem;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .step-card:hover { transform: translateY(-4px); border-color: rgba(29,179,160,0.3); }
+
+  .step-num {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .step-num.s1 { background: rgba(29,179,160,0.15); color: var(--teal); border: 1px solid rgba(29,179,160,0.3); }
+  .step-num.s2 { background: rgba(240,165,0,0.15); color: var(--amber); border: 1px solid rgba(240,165,0,0.3); }
+  .step-num.s3 { background: rgba(29,179,160,0.15); color: var(--teal); border: 1px solid rgba(29,179,160,0.3); }
+
+  .step-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 1.05rem;
+    color: var(--white); margin-bottom: 0.75rem;
+  }
+  .step-card p { font-size: 0.88rem; color: var(--gray); line-height: 1.65; }
+
+  .step-tag {
+    display: inline-block; margin-top: 1rem;
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em;
+    padding: 0.3rem 0.75rem; border-radius: 20px;
+  }
+  .step-tag.teal { background: rgba(29,179,160,0.12); color: var(--teal-light); }
+  .step-tag.amber { background: rgba(240,165,0,0.12); color: var(--amber-light); }
+
+  /* MARKET */
+  .market { background: var(--navy-mid); }
+  .market-inner { max-width: 1100px; margin: 0 auto; }
+  .market-header { margin-bottom: 3.5rem; }
+
+  .market-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-bottom: 3rem;
+  }
+
+  .market-card {
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 14px; padding: 2rem;
+    transition: border-color 0.2s;
+  }
+  .market-card:hover { border-color: rgba(240,165,0,0.25); }
+
+  .market-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 2.4rem;
+    letter-spacing: -0.03em; color: var(--amber);
+    margin-bottom: 0.5rem;
+  }
+  .market-card h4 {
+    font-size: 0.9rem; font-weight: 500; color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .market-card p { font-size: 0.82rem; color: var(--gray); line-height: 1.6; }
+
+  .market-quote {
+    background: linear-gradient(135deg, rgba(29,179,160,0.08), rgba(240,165,0,0.08));
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px; padding: 2rem 2.5rem;
+    display: flex; gap: 1.5rem; align-items: flex-start;
+  }
+
+  .quote-mark {
+    font-family: 'Syne', sans-serif;
+    font-size: 4rem; line-height: 1; color: var(--amber);
+    opacity: 0.4; flex-shrink: 0; margin-top: -0.5rem;
+  }
+
+  .market-quote p {
+    font-size: 1rem; font-weight: 300; font-style: italic;
+    color: var(--gray-light); line-height: 1.7;
+  }
+
+  /* TRACTION */
+  .traction { background: var(--navy); }
+  .traction-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+  }
+
+  .traction-items { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2rem; }
+
+  .traction-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .traction-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 6px;
+  }
+  .traction-dot.amber { background: var(--amber); }
+  .traction-dot.teal { background: var(--teal); }
+
+  .traction-item p { font-size: 0.88rem; color: var(--gray-light); line-height: 1.6; }
+  .traction-item strong { color: var(--white); font-weight: 500; }
+
+  .model-grid { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+
+  .model-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--navy-mid); border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .model-row-left { display: flex; flex-direction: column; gap: 3px; }
+  .model-row-left span:first-child { font-size: 0.9rem; font-weight: 500; color: var(--white); }
+  .model-row-left span:last-child { font-size: 0.78rem; color: var(--gray); }
+  .model-badge {
+    font-size: 0.75rem; font-weight: 500;
+    padding: 0.3rem 0.85rem; border-radius: 20px;
+  }
+  .model-badge.amber { background: rgba(240,165,0,0.12); color: var(--amber-light); }
+  .model-badge.teal { background: rgba(29,179,160,0.12); color: var(--teal-light); }
+  .model-badge.gray { background: rgba(138,155,176,0.12); color: var(--gray-light); }
+
+  /* CTA */
+  .cta-section {
+    background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy-light) 100%);
+    border-top: 1px solid var(--border);
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(240,165,0,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .cta-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--amber);
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.03em; line-height: 1.1;
+    color: var(--white); margin-bottom: 1.25rem;
+  }
+
+  .cta-title em { font-style: normal; color: var(--amber); }
+
+  .cta-sub {
+    font-size: 1rem; font-weight: 300; color: var(--gray-light);
+    line-height: 1.7; margin-bottom: 2.5rem;
+  }
+
+  .cta-actions { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-large {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 500;
+    padding: 1rem 2.5rem;
+    background: var(--amber); color: var(--navy);
+    border: none; border-radius: 8px; cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-large:hover { background: var(--amber-light); transform: translateY(-2px); }
+
+  .btn-outline {
+    font-size: 1rem; font-weight: 400;
+    padding: 1rem 2.5rem;
+    background: transparent; color: var(--white);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.5); }
+
+  .cta-note {
+    margin-top: 1.5rem;
+    font-size: 0.8rem; color: var(--gray);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1rem; color: var(--gray);
+  }
+
+  footer p { font-size: 0.78rem; color: var(--gray); }
+
+  /* DIVIDER */
+  .section-divider {
+    width: 48px; height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--amber));
+    margin-bottom: 2rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeUp 0.5s ease both; }
+  .hero-title { animation: fadeUp 0.5s 0.1s ease both; }
+  .hero-subtitle { animation: fadeUp 0.5s 0.2s ease both; }
+  .hero-actions { animation: fadeUp 0.5s 0.3s ease both; }
+  .hero-stats { animation: fadeUp 0.5s 0.4s ease both; }
+  .hero-image-wrap { animation: fadeUp 0.6s 0.2s ease both; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; gap: 2.5rem; }
+    .hero-image-wrap { order: -1; }
+    .hero-img { max-width: 100%; }
+    .problem-inner, .traction-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .steps, .market-grid { grid-template-columns: 1fr; }
+    .steps::before { display: none; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span>CF</span>
+    CivicFlow
+  </div>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#market">Market</a></li>
+    <li><a href="#traction">Model</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Request a Demo</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Urban Mobility · Fintech · Emerging Markets</div>
+    <h1 class="hero-title">
+      Your Commute.<br><em>Guaranteed.</em>
+    </h1>
+    <p class="hero-subtitle">
+      CivicFlow is the first commute warranty platform for emerging market cities — predicting reliability, nudging workers to leave at the right time, and financially compensating them when the system fails.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Request a Demo →</a>
+      <a href="#solution" class="btn-secondary">See how it works ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">2.4<span>B</span></div>
+        <div class="stat-label">Daily urban commuters globally</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">₹500<span>+</span></div>
+        <div class="stat-label">Avg. monthly salary lost to lateness</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">68<span>%</span></div>
+        <div class="stat-label">Commuters in emerging markets</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-image-wrap">
+    <img src="image5.jpg" alt="CivicFlow — Your Commute Guaranteed" class="hero-img">
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="problem-inner">
+    <div>
+      <div class="section-label">The Problem</div>
+      <div class="section-divider"></div>
+      <h2 class="section-title">The city is a gamble.<br>Workers are losing.</h2>
+      <p class="section-sub">
+        In cities like Delhi, Jakarta, and São Paulo, 500 million daily commuters navigate unpredictable transit, informal last-mile options, and zero safety nets — with their salaries on the line every single morning.
+      </p>
+    </div>
+    <div class="problem-cards">
+      <div class="problem-card">
+        <div class="problem-icon">⏱</div>
+        <div>
+          <h4>Unpredictable Transit</h4>
+          <p>Metro delays, auto no-shows, and chaotic last-mile connections make on-time arrival a matter of luck, not planning.</p>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">💸</div>
+        <div>
+          <h4>Real Financial Consequences</h4>
+          <p>Workers earning ₹15–40K/month face salary deductions, missed shifts, and docked pay for delays they didn't cause.</p>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">📵</div>
+        <div>
+          <h4>No Safety Net Exists</h4>
+          <p>Google Maps shows traffic. Transit apps show schedules. Nobody compensates you when the system fails.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="solution-inner">
+    <div class="solution-header">
+      <div class="section-label">The Solution</div>
+      <div class="section-divider"></div>
+      <h2 class="section-title">Predict. Nudge. Guarantee.</h2>
+      <p class="section-sub">CivicFlow is a three-layer platform that turns commute chaos into a guaranteed, financially-backed experience for workers and a productivity tool for employers.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num s1">01</div>
+        <h3>Corridor Intelligence</h3>
+        <p>We build hyper-local predictive models for each urban corridor using employer attendance data and real-time transit feeds — generating a single "Commute Score" for every origin-destination pair.</p>
+        <span class="step-tag teal">Predict Reliability</span>
+      </div>
+      <div class="step-card">
+        <div class="step-num s2">02</div>
+        <h3>Smart Departure Nudges</h3>
+        <p>The app proactively tells workers exactly when to leave — not just the fastest route, but the most reliably on-time one. Offline-first, works on 2G, under 5MB.</p>
+        <span class="step-tag amber">Reduce Lateness</span>
+      </div>
+      <div class="step-card">
+        <div class="step-num s3">03</div>
+        <h3>The Commute Warranty</h3>
+        <p>If a worker follows CivicFlow's guidance and still arrives late, a lateness voucher hits their account instantly. No forms, no arguments. Backed by micro-insurance.</p>
+        <span class="step-tag teal">Financial Protection</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section class="market" id="market">
+  <div class="market-inner">
+    <div class="market-header">
+      <div class="section-label">Market Opportunity</div>
+      <div class="section-divider"></div>
+      <h2 class="section-title">A $90B problem hiding in plain sight.</h2>
+      <p class="section-sub">Urban mobility in emerging markets is the largest underserved category in fintech and mobility — where existing players solve routing, not reliability.</p>
+    </div>
+    <div class="market-grid">
+      <div class="market-card">
+        <div class="market-num">500M</div>
+        <h4>Target Commuters</h4>
+        <p>Semi-formal and formal sector workers across India, Indonesia, and Brazil who commute 45–90 mins daily.</p>
+      </div>
+      <div class="market-card">
+        <div class="market-num">$90B</div>
+        <h4>Productivity Lost</h4>
+        <p>Annual GDP impact of commute-related lateness and absenteeism in South and Southeast Asia alone.</p>
+      </div>
+      <div class="market-card">
+        <div class="market-num">₹49</div>
+        <h4>Monthly ARPU</h4>
+        <p>Consumer premium subscription — affordable at scale, with B2B employer SaaS at ₹15–30/employee/month.</p>
+      </div>
+    </div>
+    <div class="market-quote">
+      <div class="quote-mark">"</div>
+      <p>For a worker earning ₹25,000 a month, a ₹500 salary deduction for being 10 minutes late isn't an inconvenience — it's a week of groceries. CivicFlow is the first product that treats that reality seriously.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TRACTION & MODEL -->
+<section class="traction" id="traction">
+  <div class="traction-inner">
+    <div>
+      <div class="section-label">Traction & Vision</div>
+      <div class="section-divider"></div>
+      <h2 class="section-title">Built to scale from day one.</h2>
+      <p class="section-sub">Our employer-first GTM solves cold-start and gives us paying customers before the consumer product launches.</p>
+      <div class="traction-items">
+        <div class="traction-item">
+          <div class="traction-dot amber"></div>
+          <p><strong>Employer-first GTM:</strong> Sign 2–3 anchor employers per city corridor before launch — solving cold-start and building the corridor data needed for the consumer product.</p>
+        </div>
+        <div class="traction-item">
+          <div class="traction-dot teal"></div>
+          <p><strong>Payroll API integration:</strong> Once integrated into HR/payroll systems, CivicFlow becomes a structural dependency — creating a deeply defensible moat.</p>
+        </div>
+        <div class="traction-item">
+          <div class="traction-dot amber"></div>
+          <p><strong>Three compounding moats:</strong> Employer relationships + proprietary corridor data + individual commute history = barriers that grow stronger over time.</p>
+        </div>
+        <div class="traction-item">
+          <div class="traction-dot teal"></div>
+          <p><strong>B2G data licensing:</strong> Anonymised corridor intelligence sold to municipal transport authorities as a secondary revenue stream.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Business Model</div>
+      <div class="section-divider"></div>
+      <h2 class="section-title">Three revenue streams.</h2>
+      <p class="section-sub">Diversified across B2B, B2C, and B2G — de-risking the business from day one.</p>
+      <div class="model-grid">
+        <div class="model-row">
+          <div class="model-row-left">
+            <span>Employer SaaS</span>
+            <span>₹15–30 / employee / month</span>
+          </div>
+          <span class="model-badge amber">Primary</span>
+        </div>
+        <div class="model-row">
+          <div class="model-row-left">
+            <span>Consumer Subscription</span>
+            <span>₹49 / month freemium</span>
+          </div>
+          <span class="model-badge teal">Secondary</span>
+        </div>
+        <div class="model-row">
+          <div class="model-row-left">
+            <span>Warranty Premium</span>
+            <span>Micro-insurance per commuter</span>
+          </div>
+          <span class="model-badge teal">Secondary</span>
+        </div>
+        <div class="model-row">
+          <div class="model-row-left">
+            <span>B2G Data Licensing</span>
+            <span>Municipal transport authorities</span>
+          </div>
+          <span class="model-badge gray">Future</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner">
+    <div class="cta-badge">— Get In Touch —</div>
+    <h2 class="cta-title">Ready to back the<br><em>Commute Warranty</em>?</h2>
+    <p class="cta-sub">We're raising a pre-seed round to pilot CivicFlow across 3 employer corridors in Delhi NCR. If you invest in the future of urban mobility, we'd love to talk.</p>
+    <div class="cta-actions">
+      <a href="mailto:invest@civicflow.in" class="btn-large">Request a Pitch Deck →</a>
+      <a href="mailto:invest@civicflow.in" class="btn-outline">Schedule a Call</a>
+    </div>
+    <p class="cta-note">Currently raising pre-seed · Delhi NCR pilot · Q3 2026 launch</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">CivicFlow</div>
+  <p>© 2026 CivicFlow. Built for the 500 million.</p>
+  <p style="font-size:0.78rem;color:#8A9BB0;">invest@civicflow.in</p>
+</footer>
+
+</body>
+</html>
